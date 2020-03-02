@@ -11,13 +11,36 @@ pipeline {
         git 'https://github.com/ankit-menon/Tomcat-deployment.git'
       }
     }
-    stage('deployment') {
+    stage('Building image') {
       steps{
-          script{
-                  def image_id = registry + ":$BUILD_NUMBER"
-                  sh "ansible-playbook  playbook.yml --extra-vars \"image_id=${image_id}\""
-               }
+        script {
+          def dockerHome = tool 'myDocker'
+          env.PATH = "${dockerHome}/bin:${env.PATH}"
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
       }
+    }
+    stage('Deploy Image') {
+      steps{
+        script {
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          }
+        }
+      }
+    }
+    stage('Remove Unused docker image') {
+      steps{
+        sh "docker rmi $registry:$BUILD_NUMBER"
+      }
+    }
+    stage('deployment') {
+        steps{
+          script{
+            def image_id = registry + ":$BUILD_NUMBER"
+            sh "ansible-playbook  playbook.yml --extra-vars \"image_id=${image_id}\""
+        }
+    }
   }
-  }     
+}
 }
