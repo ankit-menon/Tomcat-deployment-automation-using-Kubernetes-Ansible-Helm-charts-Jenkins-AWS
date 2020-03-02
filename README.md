@@ -1,4 +1,4 @@
-War File Deployment Using Helm, Jenkins, Kubernetes, Docker and Ansible 
+##War File Deployment Using Helm, Jenkins, Kubernetes, Docker and Ansible 
 
 When we talk about automation and continuous delivery we usually do a bit of study and research before implementing anything which includes trying out different tools and software since it should work perfectly in the end.
 
@@ -7,7 +7,7 @@ This is one such guide to achieve this goal in an efficient manner.
 ..........................................................................................................................................
 
 
-Kubernetes cluster on AWS using KOPS –-
+##Kubernetes cluster on AWS using KOPS –-
 
 
 One of the primary steps is to get the kubernetes cluster up and running.
@@ -32,7 +32,7 @@ Using kubernetes makes it easier to scale and rollback the deployments if requir
 
 ............................................................................................................................................
 
-Installing Jenkins on Kubernetes using Helm charts –-
+##Installing Jenkins on Kubernetes using Helm charts –-
 
 
 This is the best way to install dependencies and tools on kubernetes clusters since all the packages are available as charts in a central repository.
@@ -68,7 +68,7 @@ The War file has to be called from the sorce repository and then it should be co
 .............................................................................................................................................
 
 
- Pulling the docker image and deploying it on the K8s cluster created on AWS –-
+ ##Pulling the docker image and deploying it on the K8s cluster created on AWS –-
 
 
 
@@ -84,7 +84,7 @@ Once the deployment is done it can be seen using – “kubectl get deployments�
 
 .............................................................................................................................................
 
-Jenkins Settings–-
+##Jenkins Settings–-
 
 
 Once the Jenkins is up and running before running the Build pipeline there are some changes that needs to be made in the configurations.
