@@ -1,14 +1,42 @@
-- hosts: localhost
+---
+- hosts: all
+  become: true
+  vars:
+    create_containers: 4
+    default_container_name: docker
+    default_container_image: ankitmnn7/menzy_007:21
+    default_container_command: sleep 1d
+
   tasks:
-  - name: Deploy the service
-    k8s:
-      state: present
-      definition: ""
-      validate_certs: no
-      namespace: default
-  - name: Deploy the application
-    k8s:
-      state: present
-      validate_certs: no
-      namespace: default
-      definition: ""
+    - name: Install aptitude using apt
+      apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
+
+    - name: Install required system packages
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: https://hub.docker.com/repository/docker/ankitmnn7/menzy_007/general
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt: update_cache=yes name=docker-ce state=latest
+
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
+
+    - name: Pull default Docker image
+      docker_image:
+        name: "{{ default_container_image }}"
+        source: pull
+
+    - name: Create default containers
+      docker_container:
+        name: "{{ default_container_name }}{{ item }}"
+        image: "{{ default_container_image }}"
+        command: "{{ default_container_command }}"
+        state: present
+      with_sequence: count={{ create_containers }}
